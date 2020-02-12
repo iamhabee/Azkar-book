@@ -1,6 +1,6 @@
-import 'package:flutter_chat_ui/models/user_model.dart';
+import 'package:Azkar_Book/models/user_model.dart';
 
-class Message {
+class Content {
   final User sender;
   final String
       time; // Would usually be type DateTime or Firebase Timestamp in production apps
@@ -8,7 +8,7 @@ class Message {
   final bool isLiked;
   final bool unread;
 
-  Message({
+  Content({
     this.sender,
     this.time,
     this.text,
@@ -65,50 +65,50 @@ final User steven = User(
 List<User> favorites = [sam, steven, olivia, john, greg];
 
 // EXAMPLE CHATS ON HOME SCREEN
-List<Message> chats = [
-  Message(
+List<Content> chats = [
+  Content(
     sender: james,
     time: '5:30 PM',
     text: 'Hey, how\'s it going? What did you do today?',
     isLiked: false,
     unread: true,
   ),
-  Message(
+  Content(
     sender: olivia,
     time: '4:30 PM',
     text: 'Hey, how\'s it going? What did you do today?',
     isLiked: false,
     unread: true,
   ),
-  Message(
+  Content(
     sender: john,
     time: '3:30 PM',
     text: 'Hey, how\'s it going? What did you do today?',
     isLiked: false,
     unread: false,
   ),
-  Message(
+  Content(
     sender: sophia,
     time: '2:30 PM',
     text: 'Hey, how\'s it going? What did you do today?',
     isLiked: false,
     unread: true,
   ),
-  Message(
+  Content(
     sender: steven,
     time: '1:30 PM',
     text: 'Hey, how\'s it going? What did you do today?',
     isLiked: false,
     unread: false,
   ),
-  Message(
+  Content(
     sender: sam,
     time: '12:30 PM',
     text: 'Hey, how\'s it going? What did you do today?',
     isLiked: false,
     unread: false,
   ),
-  Message(
+  Content(
     sender: greg,
     time: '11:30 AM',
     text: 'Hey, how\'s it going? What did you do today?',
@@ -118,43 +118,43 @@ List<Message> chats = [
 ];
 
 // EXAMPLE MESSAGES IN CHAT SCREEN
-List<Message> messages = [
-  Message(
+List<Content> messages = [
+  Content(
     sender: james,
     time: '5:30 PM',
     text: 'Hey, how\'s it going? What did you do today?',
     isLiked: true,
     unread: true,
   ),
-  Message(
+  Content(
     sender: currentUser,
     time: '4:30 PM',
     text: 'Just walked my doge. She was super duper cute. The best pupper!!',
     isLiked: false,
     unread: true,
   ),
-  Message(
+  Content(
     sender: james,
     time: '3:45 PM',
     text: 'How\'s the doggo?',
     isLiked: false,
     unread: true,
   ),
-  Message(
+  Content(
     sender: james,
     time: '3:15 PM',
     text: 'All the food',
     isLiked: true,
     unread: true,
   ),
-  Message(
+  Content(
     sender: currentUser,
     time: '2:30 PM',
     text: 'Nice! What kind of food did you eat?',
     isLiked: false,
     unread: true,
   ),
-  Message(
+  Content(
     sender: james,
     time: '2:00 PM',
     text: 'I ate so much food today.',

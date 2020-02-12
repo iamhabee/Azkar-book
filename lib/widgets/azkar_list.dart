@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chat_ui/models/message_model.dart';
-import 'package:flutter_chat_ui/screens/chat_screen.dart';
+import 'package:Azkar_Book/models/azkar_model.dart';
+import 'package:Azkar_Book/screens/azkar_content.dart';
 
 class RecentChats extends StatelessWidget {
   @override
@@ -22,14 +22,14 @@ class RecentChats extends StatelessWidget {
           child: ListView.builder(
             itemCount: chats.length,
             itemBuilder: (BuildContext context, int index) {
-              final Message chat = chats[index];
+              final Content content = chats[index];
               final int odd = index % 2 == 1? 1:0;
               return GestureDetector(
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (_) => ChatScreen(
-                      user: chat.sender,
+                      user: content.sender,
                     ),
                   ),
                 ),
@@ -53,7 +53,7 @@ class RecentChats extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                chat.sender.name,
+                                content.sender.name,
                                 style: TextStyle(
                                   color: Colors.grey,
                                   fontSize: 15.0,
@@ -64,7 +64,7 @@ class RecentChats extends StatelessWidget {
                               Container(
                                 width: MediaQuery.of(context).size.width * 0.45,
                                 child: Text(
-                                  chat.text,
+                                  content.text,
                                   style: TextStyle(
                                     color: Colors.blueGrey,
                                     fontSize: 15.0,

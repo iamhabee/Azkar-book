@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chat_ui/models/message_model.dart';
-import 'package:flutter_chat_ui/models/user_model.dart';
+import 'package:Azkar_Book/models/azkar_model.dart';
+import 'package:Azkar_Book/models/user_model.dart';
 
 class ChatScreen extends StatefulWidget {
   final User user;
@@ -12,7 +12,7 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  _buildMessage(Message message, bool isMe) {
+  _buildMessage(Content content, bool isMe) {
     final Container msg = Container(
       margin: isMe
           ? EdgeInsets.only(
@@ -42,7 +42,7 @@ class _ChatScreenState extends State<ChatScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            message.time,
+            content.time,
             style: TextStyle(
               color: Colors.blueGrey,
               fontSize: 16.0,
@@ -51,7 +51,7 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
           SizedBox(height: 8.0),
           Text(
-            message.text,
+            content.text,
             style: TextStyle(
               color: Colors.blueGrey,
               fontSize: 16.0,
@@ -68,11 +68,11 @@ class _ChatScreenState extends State<ChatScreen> {
       children: <Widget>[
         msg,
         IconButton(
-          icon: message.isLiked
+          icon: content.isLiked
               ? Icon(Icons.favorite)
               : Icon(Icons.favorite_border),
           iconSize: 30.0,
-          color: message.isLiked
+          color: content.isLiked
               ? Theme.of(context).primaryColor
               : Colors.blueGrey,
           onPressed: () {},
@@ -159,9 +159,9 @@ class _ChatScreenState extends State<ChatScreen> {
                     padding: EdgeInsets.only(top: 15.0),
                     itemCount: messages.length,
                     itemBuilder: (BuildContext context, int index) {
-                      final Message message = messages[index];
-                      final bool isMe = message.sender.id == currentUser.id;
-                      return _buildMessage(message, isMe);
+                      final Content content = messages[index];
+                      final bool isMe = content.sender.id == currentUser.id;
+                      return _buildMessage(content, isMe);
                     },
                   ),
                 ),
