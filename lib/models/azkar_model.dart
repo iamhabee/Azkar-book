@@ -20,24 +20,24 @@ class Content {
 // YOU - current user
 final User currentUser = User(
   id: 0,
-  name: 'Fawasil',
+  name: 'Kaamila',
   imageUrl: 'assets/images/greg.jpg',
 );
 
 // USERS
 final User greg = User(
   id: 1,
-  name: 'Jawamil',
+  name: 'Azkar Tahajud',
   imageUrl: 'assets/images/greg.jpg',
 );
 final User james = User(
   id: 2,
-  name: 'Kamila',
+  name: 'Utuba Ridoh',
   imageUrl: 'assets/images/james.jpg',
 );
 final User john = User(
   id: 3,
-  name: 'Azkar Ridor',
+  name: 'Tuklani',
   imageUrl: 'assets/images/john.jpg',
 );
 final User olivia = User(
