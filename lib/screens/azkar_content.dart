@@ -20,15 +20,14 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   
-  List<Adhkar> adhkar = adhkars;
   AzkarProvider azkarProvider;
 
   @override
   void initState() {
     // TODO: implement initState
-    azkarProvider = AzkarProvider(widget.zikiri.code);
+    azkarProvider = AzkarProvider(code: widget.zikiri.text_path);
     super.initState();
-    azkarProvider = AzkarProvider(widget.zikiri.code);
+    azkarProvider = AzkarProvider(code: widget.zikiri.text_path);
   }
 
   @override
@@ -46,9 +45,19 @@ class _ChatScreenState extends State<ChatScreen> {
         elevation: 0.0,
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.more_horiz),
+            icon: Icon(Icons.play_arrow),
             iconSize: 30.0,
             color: Colors.white,
+            tooltip: 'Play audio',
+            onPressed: () {
+              
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.translate),
+            iconSize: 30.0,
+            color: Colors.white,
+            tooltip: 'Translate to english',
             onPressed: () {
               
             },
