@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
       title: 'Azkar Book',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primaryColor: Colors.green,
+        primaryColor: Colors.blue,
         accentColor: Color(0xFFFEF9EB),
       ),
       home: HomeScreen(),

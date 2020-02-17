@@ -1,7 +1,8 @@
+import 'package:Azkar_Book/screens/AzkarSearchDelegate.dart';
 import 'package:flutter/material.dart';
 import 'package:Azkar_Book/widgets/category_selector.dart';
 import 'package:Azkar_Book/widgets/favorite_contacts.dart';
-import 'package:Azkar_Book/widgets/azkar_list.dart';
+import 'package:Azkar_Book/widgets/list_azkhar.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -9,19 +10,20 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.menu),
-          iconSize: 30.0,
-          color: Colors.white,
-          onPressed: () {},
-        ),
+        // leading: IconButton(
+        //   icon: Icon(Icons.menu),
+        //   iconSize: 30.0,
+        //   color: Colors.white,
+        //   onPressed: () {},
+        // ),
         title: Text(
-          'Azkar',
+          'List Azkar',
           style: TextStyle(
             fontSize: 28.0,
             fontWeight: FontWeight.bold,
@@ -33,9 +35,29 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(Icons.search),
             iconSize: 30.0,
             color: Colors.white,
-            onPressed: () {},
+            onPressed: () {
+              showSearch(context: context, delegate: AzkarSearchDelegate());
+            },
           ),
         ],
+      ),
+      drawer: Drawer(
+        elevation: 1.0,
+        semanticLabel: 'Semantic Label',
+        child: Container(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: <Widget>[
+              DrawerHeader(
+                child: Text('Abdulkabir Toyyib'),
+              ),
+              ListTile(
+                title: Text('Home'),
+                leading: Icon(Icons.home),
+              )
+            ],
+          ),
+        ),
       ),
       body: Column(
         children: <Widget>[
@@ -51,8 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               child: Column(
                 children: <Widget>[
-//                  FavoriteContacts(),
-                  RecentChats(),
+                  AdhkarList(),
                 ],
               ),
             ),

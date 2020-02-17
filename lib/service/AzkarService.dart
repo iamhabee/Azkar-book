@@ -8,11 +8,11 @@ class AzkarService {
 
   static String filePath = '/data/azkar.txt';
 
-  static Future<String> getAzkarContent() async {
+  static Future<String> getAzkarContent(String code) async {
     String text;
     try {
-      text = await rootBundle.loadString('assets/data/azkar.txt');
-      print(text);
+      text = await rootBundle.loadString('assets/data/${code}.txt');
+      // print(text);
     } catch (e) {
       text = "Couldn't read file";
     }

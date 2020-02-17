@@ -1,22 +1,35 @@
 import 'dart:async';
 
-import 'package:Azkar_Book/models/user_model.dart';
+import 'package:Azkar_Book/models/AdhkarModel.dart';
+import 'package:Azkar_Book/models/Adhkars.dart';
 import 'package:Azkar_Book/providers/AzkarProvider.dart';
-import 'package:Azkar_Book/providers/file_manager.dart';
+import 'package:Azkar_Book/widgets/SideBar.dart';
 import 'package:flutter/material.dart';
 
-class ChatScreen extends StatefulWidget {
-  final User user;
+import 'AzkarSearchDelegate.dart';
 
-  ChatScreen({this.user});
+
+class ChatScreen extends StatefulWidget {
+  final Adhkar zikiri;
+
+  ChatScreen({this.zikiri});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  
+  List<Adhkar> adhkar = adhkars;
+  AzkarProvider azkarProvider;
 
-  AzkarProvider azkarProvider = AzkarProvider();
+  @override
+  void initState() {
+    // TODO: implement initState
+    azkarProvider = AzkarProvider(widget.zikiri.code);
+    super.initState();
+    azkarProvider = AzkarProvider(widget.zikiri.code);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +37,7 @@ class _ChatScreenState extends State<ChatScreen> {
       backgroundColor: Theme.of(context).primaryColor,
       appBar: AppBar(
         title: Text(
-          widget.user.name,
+          widget.zikiri.name,
           style: TextStyle(
             fontSize: 28.0,
             fontWeight: FontWeight.bold,
@@ -36,9 +49,14 @@ class _ChatScreenState extends State<ChatScreen> {
             icon: Icon(Icons.more_horiz),
             iconSize: 30.0,
             color: Colors.white,
-            onPressed: () {},
+            onPressed: () {
+              
+            },
           ),
         ],
+      ),
+      drawer: Drawer(
+        child: SideBar(code: widget.zikiri.code,),
       ),
       body: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
