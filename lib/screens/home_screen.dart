@@ -35,13 +35,14 @@ class _HomeScreenState extends State<HomeScreen> {
           Expanded(
             child: Container(
               decoration: BoxDecoration(
-                color: Theme.of(context).accentColor,
+                color: Colors.blue[200],
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(30.0),
                   topRight: Radius.circular(30.0),
                 ),
               ),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   GridView.count(
                     primary: false,
@@ -70,6 +71,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         onTap: () {
                           Navigator.push(context, MaterialPageRoute(builder: (_) => ProgramScreen()));
                         },
+                      ),
+                      GridChild(
+                        text: Text('About Us', style: TextStyle(fontSize: 24, color: Colors.white, fontWeight: FontWeight.bold),),
+                      ),
+                      GridChild(
+                        text: Text('About Us', style: TextStyle(fontSize: 24, color: Colors.white, fontWeight: FontWeight.bold),),
                       ),
                       GridChild(
                         text: Text('About Us', style: TextStyle(fontSize: 24, color: Colors.white, fontWeight: FontWeight.bold),),

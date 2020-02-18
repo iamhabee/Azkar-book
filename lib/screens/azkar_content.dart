@@ -21,6 +21,7 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   
   AzkarProvider azkarProvider;
+  bool isPlaying = false;
 
   @override
   void initState() {
@@ -45,12 +46,20 @@ class _ChatScreenState extends State<ChatScreen> {
         elevation: 0.0,
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.play_arrow),
+            icon: (isPlaying == true) ? Icon(Icons.pause) : Icon(Icons.play_arrow),
             iconSize: 30.0,
             color: Colors.white,
             tooltip: 'Play audio',
             onPressed: () {
-              
+              if (isPlaying == false) {
+                setState(() {
+                  isPlaying = true;
+                });
+              } else {
+                setState(() {
+                  isPlaying = false;
+                });
+              }
             },
           ),
           IconButton(
@@ -106,6 +115,16 @@ class _ChatScreenState extends State<ChatScreen> {
           ],
         ),
       ),
+      // bottomSheet: BottomSheet(
+      //   onClosing: () {},
+      //   builder: (context) {
+      //     return Container(
+      //       child: Center(
+      //         child: CircularProgressIndicator()
+      //       )
+      //     );
+      //   }
+      // ),
     );
   }
 }
