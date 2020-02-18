@@ -1,5 +1,7 @@
 import 'package:Azkar_Book/screens/adhkar_screen.dart';
+import 'package:Azkar_Book/screens/branch_screen.dart';
 import 'package:Azkar_Book/screens/events_screen.dart';
+import 'package:Azkar_Book/screens/lecture_screen.dart';
 import 'package:Azkar_Book/screens/program_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -56,27 +58,36 @@ class _HomeScreenState extends State<HomeScreen> {
                         text: Text('Adhkar', style: TextStyle(fontSize: 24, color: Colors.white, fontWeight: FontWeight.bold),),
                         image: 'adhkar',
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (_) => AdhkarScreen() ));
+                          Navigator.push(context, MaterialPageRoute(builder: (_) => AdhkarScreen()));
                         },
                       ),
                       GridChild(
-                        text: Text('Events', style: TextStyle(fontSize: 24, color: Colors.white, fontWeight: FontWeight.bold),),
+                        text: Text('Events', style: TextStyle(fontSize: 24, color: Colors.blue, fontWeight: FontWeight.bold),),
                         image: 'events',
                         onTap: () {
                           Navigator.push(context, MaterialPageRoute(builder: (_) => EventScreen() ));
                         },
                       ),
+                      // GridChild(
+                      //   text: Text('Programs', style: TextStyle(fontSize: 24, color: Colors.white, fontWeight: FontWeight.bold),),
+                      //   image: 'programs',
+                      //   onTap: () {
+                      //     Navigator.push(context, MaterialPageRoute(builder: (_) => ProgramScreen()));
+                      //   },
+                      // ),
                       GridChild(
-                        text: Text('Programs', style: TextStyle(fontSize: 24, color: Colors.white, fontWeight: FontWeight.bold),),
+                        text: Text('Lectures', style: TextStyle(fontSize: 24, color: Colors.blue, fontWeight: FontWeight.bold),),
+                        image: 'lectures',
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (_) => ProgramScreen()));
+                          Navigator.push(context, MaterialPageRoute(builder: (_) => LectureScreen()));
                         },
                       ),
                       GridChild(
-                        text: Text('About Us', style: TextStyle(fontSize: 24, color: Colors.white, fontWeight: FontWeight.bold),),
-                      ),
-                      GridChild(
-                        text: Text('About Us', style: TextStyle(fontSize: 24, color: Colors.white, fontWeight: FontWeight.bold),),
+                        text: Text('Branches', style: TextStyle(fontSize: 24, color: Colors.white, fontWeight: FontWeight.bold),),
+                        image: 'branches',
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (_) => BranchScreen()));
+                        },
                       ),
                       GridChild(
                         text: Text('About Us', style: TextStyle(fontSize: 24, color: Colors.white, fontWeight: FontWeight.bold),),
@@ -107,7 +118,7 @@ class GridChild extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        alignment: AlignmentDirectional.center,
+        alignment: AlignmentDirectional.bottomCenter,
         padding: const EdgeInsets.all(8),
         child: text,
         decoration: BoxDecoration(

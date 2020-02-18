@@ -27,9 +27,9 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     // TODO: implement initState
-    azkarProvider = AzkarProvider(code: widget.zikiri.text_path);
+    // azkarProvider = AzkarProvider(code: widget.zikiri.code);
     super.initState();
-    azkarProvider = AzkarProvider(code: widget.zikiri.text_path);
+    azkarProvider = AzkarProvider(code: widget.zikiri.code);
   }
 
   @override
@@ -68,36 +68,46 @@ class _ChatScreenState extends State<ChatScreen> {
               child: StreamBuilder<String>(
                 stream: azkarProvider.azkarContent,
                 builder: (context, AsyncSnapshot<String> snapshot) {
-                  if (snapshot.hasError) {
-                    return Text(snapshot.error.toString());
-                  } else {
-                    String str = (snapshot.hasData) ? snapshot.data.replaceAll('\n', '') : '';
-                    List<String> adhkarContent = str.split('-').toList();
-                    // print(adhkarContent.length);
-                    return ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      itemCount: adhkarContent.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          key: Key(index.toString()),
-                          title: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              adhkarContent[index].toString(), 
-                              style: TextStyle(fontSize: 20, fontFamily: 'Montserrat', color: Colors.red[900]), 
-                              textAlign: TextAlign.justify,
-                            ),
-                          ),
+                  // print(snapshot.connectionState);
+                  switch(snapshot.connectionState) {
+                    case ConnectionState.none:
+                    case ConnectionState.waiting:
+                    case ConnectionState.active:
+                      return Center(child: CircularProgressIndicator(backgroundColor: Colors.blue,));
+                    case ConnectionState.done:
+                      // print(snapshot.hasData);
+                      if (snapshot.hasError) {
+                        return Center(child: Text(snapshot.error.toString(), style: TextStyle(color: Colors.red)));
+                      } else {
+                        String str = (snapshot.hasData) ? snapshot.data.replaceAll('\n', '') : '';
+                        List<String> adhkarContent = str.split('-').toList();
+                        // print(adhkarContent.length);
+                        return ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: adhkarContent.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              key: Key(index.toString()),
+                              title: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  adhkarContent[index].toString(), 
+                                  style: TextStyle(fontSize: 20, fontFamily: 'Montserrat', color: Colors.red[900]), 
+                                  textAlign: TextAlign.justify,
+                                ),
+                              ),
+                            );
+                          }
                         );
                       }
-                    );
+                      break;
                   }
                 }
               ),
             ),
             Container(
-              child: AdhkarAudioWidget(audioPath: widget.zikiri.audio_path,)
+              child: AdhkarAudioWidget(zikiri: widget.zikiri, type: 'adhkar',)
             )
           ],
         ),

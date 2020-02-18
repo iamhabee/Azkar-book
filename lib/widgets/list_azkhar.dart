@@ -19,7 +19,7 @@ class AdhkarList extends StatelessWidget {
           case ConnectionState.none:
           case ConnectionState.waiting:
           case ConnectionState.active:
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator(backgroundColor: Colors.blue,));
           case ConnectionState.done:
             List<Adhkar> adhkars = snapshot.data;
             return Container(
