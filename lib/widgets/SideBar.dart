@@ -26,14 +26,9 @@ class _SideBarState extends State<SideBar> {
         children: <Widget>[
           SideBarUseraccount(),
           ListTile(
-            title: Text('Home', style: TextStyle(fontSize: 20 ,color: Colors.red[900]),),
+            title: Text('Home', style: TextStyle(fontSize: 20 ,color: Colors.black),),
             leading: Icon(Icons.home),
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => HomeScreen(),
-              ),
-            ),
+            onTap: () => Navigator.popUntil(context, (Route<dynamic> route) => route.isFirst)
           ),
           Container(
             child: FutureBuilder(
@@ -47,32 +42,31 @@ class _SideBarState extends State<SideBar> {
                     break;
                   case ConnectionState.done:
                     List<Adhkar> zikrs = snapshot.data;
-                    print(zikrs);
                     return ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: zikrs.length,
-                    itemBuilder: (context, index) {
-                      Adhkar zikr = zikrs[index];
-                      return ListTile(
-                        title: Text(zikr.name, style: TextStyle(fontSize: 20 ,color: (zikr.code == widget.code) ? Colors.red[900] : Colors.redAccent[100]),),
-                        leading: Icon(Icons.library_books),
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => ChatScreen(
-                              zikiri: zikr,
+                      shrinkWrap: true,
+                      itemCount: zikrs.length,
+                      itemBuilder: (context, index) {
+                        Adhkar zikr = zikrs[index];
+                        return ListTile(
+                          title: Text(zikr.name, style: TextStyle(fontSize: 20 ,color: (zikr.code == widget.code) ? Colors.red[900] : Colors.black),),
+                          leading: Icon(Icons.library_books),
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => ChatScreen(
+                                zikiri: zikr,
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    }
-                  );
+                        );
+                      }
+                    );
+                    break;
+                  default:
+                    return CircularProgressIndicator();
                 }
               },
             )
-            
-            
-            
           ),
         ],
       ),

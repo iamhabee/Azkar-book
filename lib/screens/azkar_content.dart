@@ -94,7 +94,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           if (snapshot.hasError) {
                             return Text(snapshot.error.toString());
                           } else {
-                            return Text(snapshot.data.toString(), style: TextStyle(fontSize: 20));
+                            return Text(snapshot.data.toString(), style: TextStyle(fontSize: 20, fontFamily: 'Montserrat',));
                           }
                         }
                       ),

@@ -90,6 +90,7 @@ class AdhkarList extends StatelessWidget {
                                                     color: Colors.blueGrey,
                                                     fontSize: 15.0,
                                                     fontWeight: FontWeight.w600,
+                                                    fontFamily: 'Lacquer',
                                                   ),
                                                   overflow: TextOverflow.ellipsis,
                                                 ),

@@ -30,7 +30,7 @@ class AzkarSearchDelegate extends SearchDelegate {
   @override
   Widget buildResults(BuildContext context) {
     // TODO: implement buildResults
-    if (query.length < 3) {
+    if (query.length <= 1) {
       return Center(
         child: Text('Type more than 3 character'),
       );
@@ -41,7 +41,9 @@ class AzkarSearchDelegate extends SearchDelegate {
   @override
   Widget buildSuggestions(BuildContext context) {
     // TODO: implement buildSuggestions
-    return Container();
+    return Container(
+      child: Text(query)
+    );
   }
   
 }
