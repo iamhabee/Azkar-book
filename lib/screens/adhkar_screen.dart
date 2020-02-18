@@ -2,6 +2,7 @@ import 'package:Azkar_Book/models/AdhkarModel.dart';
 import 'package:Azkar_Book/providers/AzkarProvider.dart';
 import 'package:Azkar_Book/screens/AzkarSearchDelegate.dart';
 import 'package:Azkar_Book/service/AzkarService.dart';
+import 'package:Azkar_Book/widgets/GeneralViewWidget.dart';
 import 'package:Azkar_Book/widgets/HomeSideBar.dart';
 import 'package:flutter/material.dart';
 import 'package:Azkar_Book/widgets/list_azkhar.dart';
@@ -45,23 +46,9 @@ class _AdhkarScreenState extends State<AdhkarScreen> {
       ),
       body: Column(
         children: <Widget>[
-//          CategorySelector(),
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).accentColor,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30.0),
-                  topRight: Radius.circular(30.0),
-                ),
-              ),
-              child: Column(
-                children: <Widget>[
-                  AdhkarList(adhkarFuture: adhkarFuture,),
-                ],
-              ),
-            ),
-          ),
+          GeneralWidget(
+            child: AdhkarList(adhkarFuture: adhkarFuture,),
+          )
         ],
       ),
     );

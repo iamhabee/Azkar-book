@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:Azkar_Book/models/AdhkarModel.dart';
 import 'package:Azkar_Book/models/Adhkars.dart';
 import 'package:Azkar_Book/providers/AzkarProvider.dart';
+import 'package:Azkar_Book/widgets/AdhkarAudioWidget.dart';
+import 'package:Azkar_Book/widgets/GeneralViewWidget.dart';
 import 'package:Azkar_Book/widgets/SideBar.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +23,6 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   
   AzkarProvider azkarProvider;
-  bool isPlaying = false;
 
   @override
   void initState() {
@@ -46,23 +47,6 @@ class _ChatScreenState extends State<ChatScreen> {
         elevation: 0.0,
         actions: <Widget>[
           IconButton(
-            icon: (isPlaying == true) ? Icon(Icons.pause) : Icon(Icons.play_arrow),
-            iconSize: 30.0,
-            color: Colors.white,
-            tooltip: 'Play audio',
-            onPressed: () {
-              if (isPlaying == false) {
-                setState(() {
-                  isPlaying = true;
-                });
-              } else {
-                setState(() {
-                  isPlaying = false;
-                });
-              }
-            },
-          ),
-          IconButton(
             icon: Icon(Icons.translate),
             iconSize: 30.0,
             color: Colors.white,
@@ -80,38 +64,41 @@ class _ChatScreenState extends State<ChatScreen> {
         onTap: () => FocusScope.of(context).unfocus(),
         child: Column(
           children: <Widget>[
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30.0),
-                    topRight: Radius.circular(30.0),
-                  ),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30.0),
-                    topRight: Radius.circular(30.0),
-                  ),
-                  child: Container(
-                    padding: const EdgeInsets.all(16.0),
-                    child: SingleChildScrollView(
-                      child: StreamBuilder<String>(
-                        stream: azkarProvider.azkarContent,
-                        builder: (context, AsyncSnapshot<String> snapshot) {
-                          if (snapshot.hasError) {
-                            return Text(snapshot.error.toString());
-                          } else {
-                            return Text(snapshot.data.toString(), style: TextStyle(fontSize: 20, fontFamily: 'Montserrat',));
-                          }
-                        }
-                      ),
-                    ),
-                  ),
-                ),
+            GeneralWidget(
+              child: StreamBuilder<String>(
+                stream: azkarProvider.azkarContent,
+                builder: (context, AsyncSnapshot<String> snapshot) {
+                  if (snapshot.hasError) {
+                    return Text(snapshot.error.toString());
+                  } else {
+                    String str = (snapshot.hasData) ? snapshot.data.replaceAll('\n', '') : '';
+                    List<String> adhkarContent = str.split('-').toList();
+                    // print(adhkarContent.length);
+                    return ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemCount: adhkarContent.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          key: Key(index.toString()),
+                          title: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              adhkarContent[index].toString(), 
+                              style: TextStyle(fontSize: 20, fontFamily: 'Montserrat', color: Colors.red[900]), 
+                              textAlign: TextAlign.justify,
+                            ),
+                          ),
+                        );
+                      }
+                    );
+                  }
+                }
               ),
             ),
+            Container(
+              child: AdhkarAudioWidget(audioPath: widget.zikiri.audio_path,)
+            )
           ],
         ),
       ),
