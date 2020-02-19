@@ -26,7 +26,6 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     // azkarProvider = AzkarProvider(code: widget.zikiri.code);
     super.initState();
     azkarProvider = AzkarProvider(code: widget.zikiri.code);
@@ -51,9 +50,7 @@ class _ChatScreenState extends State<ChatScreen> {
             iconSize: 30.0,
             color: Colors.white,
             tooltip: 'Translate to english',
-            onPressed: () {
-              
-            },
+            onPressed: () {},
           ),
         ],
       ),
@@ -61,7 +58,6 @@ class _ChatScreenState extends State<ChatScreen> {
         child: SideBar(code: widget.zikiri.code,),
       ),
       body: GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
         child: Column(
           children: <Widget>[
             GeneralWidget(
@@ -82,23 +78,25 @@ class _ChatScreenState extends State<ChatScreen> {
                         String str = (snapshot.hasData) ? snapshot.data.replaceAll('\n', '') : '';
                         List<String> adhkarContent = str.split('-').toList();
                         // print(adhkarContent.length);
-                        return ListView.builder(
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          itemCount: adhkarContent.length,
-                          itemBuilder: (context, index) {
-                            return ListTile(
-                              key: Key(index.toString()),
-                              title: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  adhkarContent[index].toString(), 
-                                  style: TextStyle(fontSize: 20, fontFamily: 'Montserrat', color: Colors.red[900]), 
-                                  textAlign: TextAlign.justify,
+                        return OverflowBox(
+                          child: ListView.builder(
+                            scrollDirection: Axis.vertical,
+                            shrinkWrap: true,
+                            itemCount: adhkarContent.length,
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                key: Key(index.toString()),
+                                title: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    adhkarContent[index].toString(), 
+                                    style: TextStyle(fontSize: 20, fontFamily: 'Montserrat', color: Colors.red[900]), 
+                                    textAlign: TextAlign.justify,
+                                  ),
                                 ),
-                              ),
-                            );
-                          }
+                              );
+                            }
+                          ),
                         );
                       }
                       break;

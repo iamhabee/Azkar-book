@@ -31,6 +31,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         elevation: 0.0,
+        actions: <Widget>[
+          IconButton(icon: Icon(Icons.settings), onPressed: (){})
+        ],
       ),
       body: Column(
         children: <Widget>[
@@ -90,7 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                       ),
                       GridChild(
-                        text: Text('About Us', style: TextStyle(fontSize: 24, color: Colors.white, fontWeight: FontWeight.bold),),
+                        text: Text('About Us', style: TextStyle(fontSize: 24, color: Colors.blue[900], fontWeight: FontWeight.bold),),
                       ),
                     ],
                   )
@@ -117,29 +120,20 @@ class GridChild extends StatelessWidget {
     
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        alignment: AlignmentDirectional.bottomCenter,
-        padding: const EdgeInsets.all(8),
-        child: text,
-        decoration: BoxDecoration(
-          image: DecorationImage(image: AssetImage(image_path)),
-          border: Border.all(
-            color: Colors.blue,
-          ),
-          borderRadius: BorderRadius.all(
-            Radius.circular(10.0)
-          ),
-          boxShadow: [
-            BoxShadow(
+      child: Material(
+        elevation: 2.0,
+        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+        child: Container(
+          alignment: AlignmentDirectional.bottomCenter,
+          padding: const EdgeInsets.all(8),
+          child: text,
+          decoration: BoxDecoration(
+            image: DecorationImage(image: AssetImage(image_path)),
+            borderRadius: BorderRadius.all(Radius.circular(12.0)),
+            border: Border.all(
               color: Colors.blue,
-              blurRadius: 2.0, // has the effect of softening the shadow
-              spreadRadius: 1.0, // has the effect of extending the shadow
-              offset: Offset(
-                1.0, // horizontal, move right 10
-                1.0, // vertical, move down 10
-              ),
-            )
-          ],
+            ),
+          ),
         ),
       ),
     );

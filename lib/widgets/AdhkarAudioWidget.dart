@@ -1,12 +1,13 @@
 import 'dart:io';
 
 import 'package:Azkar_Book/models/AdhkarModel.dart';
-import 'package:audioplayers/audio_cache.dart';
+import 'package:Azkar_Book/service/AudioFileDowloader.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:percent_indicator/linear_percent_indicator.dart';
 
 
 
@@ -28,29 +29,101 @@ class _AdhkarAudioWidgetState extends State<AdhkarAudioWidget> {
   String _url;
   String _indicatorText = 'Click play button to play audio';
   AudioPlayerState audioPlayerState;
+  List play_group;
+  int total_play_group;
+  int current_play_group_index;
+  String current_play_group_code;
+  AudioFileDowloader audioFileDowloader;
+  Duration position;
+  Duration duration;
+
+  bool gettingFile = false;
 
   Future loadAsset(String path) async {
     return await rootBundle.load(path);
   }
 
-  play(path) async {
-    try {
+  Future loadFileFromUrl() async {
+    File file = new File('${(await getTemporaryDirectory()).path}/'+current_play_group_code+'.mp3');
+    if (!(await file.exists())) {
       setState(() {
-        _indicatorText = 'Getting audio file...';
+        gettingFile = true;
+        _indicatorText = 'Downloading Audio File...';
       });
-      var req = await http.Client().get(Uri.parse(_url));
-      var file = new File('${(await getTemporaryDirectory()).path}/music.mp3');
-      file.writeAsBytes(req.bodyBytes);
-
-      print(req.bodyBytes);
-      final result = await audioPlayer.play(file.path, isLocal: true);
-      // int result = (await audioPlayer.play(widget.audioPath.toString())) as int;
-      print('Play Result: '+result.toString());
-      if (result == 1) {
+      http.Response req = await http.Client().get(Uri.parse(_url));
+      if (req.statusCode == 200) {
+        var file = new File('${(await getTemporaryDirectory()).path}/'+current_play_group_code+'.mp3');
+        file.writeAsBytes(req.bodyBytes).whenComplete(() => setState(() => gettingFile = false)).catchError((onError) => print('Moving Error: '+onError.toString()));
+      } else {
         setState(() {
-          audioPlayerState = AudioPlayerState.PLAYING;
-          _indicatorText = 'Listening to '+widget.zikiri.name+' by '+_selectedReciter;
+          gettingFile = false;
+          _indicatorText = 'Unable to load file';
         });
+        throw Exception('Failed to load audio');
+      }
+    }
+  }
+
+  void listenToChanges() {
+    
+    audioPlayer.onPlayerStateChanged.listen((playState) {
+      setState(() => audioPlayerState = playState);
+    });
+
+    audioPlayer.onPlayerCompletion.listen((event) {
+      setState(() {
+        if ((current_play_group_index + 1) == total_play_group) {
+          setState(() { 
+            audioPlayerState = AudioPlayerState.COMPLETED;
+            _indicatorText = 'Audio completed, Click the play button to repeat';
+          });
+        } else {
+          setState(() {
+            stop();
+            current_play_group_index = current_play_group_index + 1;
+            current_play_group_code = widget.zikiri.play_group[current_play_group_index];
+          });
+          play();
+        }
+      });
+    });
+
+    audioPlayer.onPlayerError.listen((msg) {
+      print('audioPlayer error : $msg');
+      setState(() {
+        audioPlayerState = AudioPlayerState.STOPPED;
+        // duration = Duration(seconds: 0);
+        // position = Duration(seconds: 0);
+      });
+    });
+    
+    audioPlayer.onAudioPositionChanged.listen((Duration  p) {
+      print('Current position: $p');
+      setState(() => position = p);
+    });
+  
+    audioPlayer.onDurationChanged.listen((Duration d) {
+      print('Max duration: $d');
+      setState(() => duration = d);
+    });
+  }
+
+  play() async {
+    try {
+      var file = new File('${(await getTemporaryDirectory()).path}/'+current_play_group_code+'.mp3');
+      // print('Path Play: '+(await file.exists()).toString());
+      if (await file.exists()) {
+        final result = await audioPlayer.play(file.path, isLocal: true);
+        print('Play Result: '+result.toString());
+        if (result == 1) {
+          setState(() {
+            _indicatorText = 'Listening to '+widget.zikiri.name+' by '+_selectedReciter;
+            gettingFile = false;
+          });
+        }
+      } else {
+        await loadFileFromUrl();
+        play();
       }
     } catch (e) {
       print('Play Error '+e.toString());
@@ -62,7 +135,6 @@ class _AdhkarAudioWidgetState extends State<AdhkarAudioWidget> {
       final result = await audioPlayer.resume();
       if (result == 1) {
         setState(() {
-          audioPlayerState = AudioPlayerState.PLAYING;
           _indicatorText = 'Listening to '+widget.zikiri.name+' by '+_selectedReciter;
         });
       }
@@ -77,7 +149,6 @@ class _AdhkarAudioWidgetState extends State<AdhkarAudioWidget> {
       print('Pause Result: '+result.toString());
       if (result == 1) {
         setState(() {
-          audioPlayerState = AudioPlayerState.PAUSED;
           _indicatorText = 'Audio paused. Click on play button to play audio';
         });
       }
@@ -92,7 +163,6 @@ class _AdhkarAudioWidgetState extends State<AdhkarAudioWidget> {
       print('Stop Result: '+result.toString());
       if (result == 1) {
         setState(() {
-          audioPlayerState = AudioPlayerState.STOPPED;
           _indicatorText = 'Audio Stopped. Click on play button to play audio';
         });
       }
@@ -101,77 +171,116 @@ class _AdhkarAudioWidgetState extends State<AdhkarAudioWidget> {
     }
   }
 
+  seek(direction) async {
+    if (direction == 'forward') {
+      await audioPlayer.seek(position + Duration(seconds: 30));
+    } else if (direction == 'rewind') {
+      await audioPlayer.seek(position - Duration(seconds: 30));
+    }
+  }
+  
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     setState(() {
+      play_group = widget.zikiri.play_group;
+      total_play_group = widget.zikiri.play_group.length;
+      current_play_group_index = 0;
+      current_play_group_code = play_group[current_play_group_index];
       _url = (widget.type == 'adhkar') ? 'http://wetinsup.000webhostapp.com/adhkar_book/adhkars/audio/'+widget.zikiri.code+'.mp3' : (widget.type == 'lecture') ? '' : '';
     });
+    listenToChanges();
+    loadFileFromUrl();
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    stop();
     audioPlayer.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(
-          bottomRight: Radius.circular(100.0),
-          bottomLeft: Radius.circular(100.0)
-        )
-      ),
-      child: Column(
+    if ((gettingFile)) {
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: <Widget>[
+            Center(
+              child: LinearProgressIndicator(backgroundColor: Colors.blue,)
+            ),
+            Center(child: Text(_indicatorText)),
+          ],
+        ),
+      );
+    } else {
+      return Column(
+        // crossAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: LinearPercentIndicator(
+                    lineHeight: 8.0,
+                    percent: (position != null) ? (position.inMilliseconds/1000000).toDouble() : 0.0,
+                    progressColor: Colors.white,
+                  ),
+                ),
+                Text(position.toString()),
+              ],
+            ),
+          ),
           Row(
             children: <Widget>[
               Expanded(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    Text('Reciter:',),
-                    DropdownButton<String>(
-                      value: _selectedReciter,
-                      icon: Icon(Icons.arrow_downward),
-                      iconSize: 24,
-                      elevation: 16,
-                      style: TextStyle(
-                        color: Colors.deepPurple
-                      ),
-                      underline: Container(
-                        height: 2,
-                        color: Colors.white,
-                      ),
-                      onChanged: (String newValue) {
-                        setState(() {
-                          _selectedReciter = newValue;
-                        });
-                      },
-                      items: <String>['Toyyib', 'Amir Mubarak', 'Uncle Ismail', 'Uncle Nurein']
-                        .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        })
-                        .toList(),
-                    )
+                    Text(_indicatorText)
                   ],
                 )
               ),
-              (audioPlayerState == AudioPlayerState.PLAYING) ? IconButton(
-                icon: Icon(
-                  Icons.stop, 
-                  color: Colors.white,
-                ), 
-                onPressed: () {
-                  stop();
-                }
+              (audioPlayerState == AudioPlayerState.PLAYING) ? 
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  IconButton(
+                    icon: Icon(
+                      Icons.stop, 
+                      color: Colors.white,
+                    ), 
+                    onPressed: () {
+                      stop();
+                    }
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.fast_rewind, 
+                      color: Colors.white,
+                    ),
+                    tooltip: 'Back Rewind by 30 Sec',
+                    onPressed: () {
+                      seek('rewind');
+                    }
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.fast_forward, 
+                      color: Colors.white,
+                    ),
+                    tooltip: 'Fast forward by 30 Sec',
+                    onPressed: () {
+                      seek('forward');
+                    }
+                  ),
+                ],
               ) : Padding(padding: const EdgeInsets.all(0.0),),
               IconButton(
                 icon: Icon(
@@ -180,16 +289,14 @@ class _AdhkarAudioWidgetState extends State<AdhkarAudioWidget> {
                 ), 
                 onPressed: (){
                   setState(() {
-                    (audioPlayerState == AudioPlayerState.PLAYING) ? pause() : (audioPlayerState == AudioPlayerState.PAUSED) ? resume() : play(widget.zikiri.audio_path);
+                    (audioPlayerState == AudioPlayerState.PLAYING) ? pause() : (audioPlayerState == AudioPlayerState.PAUSED) ? resume() : play();
                   });
                 }
               )
             ],
-          )
-          ,
-          Text(_indicatorText)
+          ),
         ]
-      ),
-    );
+      );
+    }
   }
 }
